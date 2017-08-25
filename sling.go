@@ -352,8 +352,8 @@ func (s *Sling) Do(req *http.Request, successV, failureV interface{}) (*http.Res
 	// when err is nil, resp contains a non-nil resp.Body which must be closed
 	defer resp.Body.Close()
 
-	// Don't try to decode on 204s
-	if resp.StatusCode == 204 {
+	// Don't try to decode on a empty body
+	if resp.ContentLength <= 0 && resp.Header.Get("Transfer-Encoding") != "chunked" {
 		return resp, nil
 	}
 
